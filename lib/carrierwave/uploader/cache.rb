@@ -113,7 +113,7 @@ module CarrierWave
         
         if !version_name.nil? && model.send(mounted_as).file.present?
           # try to guess the original_filename
-          self.original_filename = model.send(mounted_as).file.filename
+          self.original_filename = model.send(mounted_as).file.filename.force_encoding('utf-8')
         else
           self.original_filename = new_file.filename
         end
