@@ -46,9 +46,9 @@ describe CarrierWave::Storage::File do
       yesterday_int      = 1370239922
 
       @cache_dir = File.expand_path(@uploader_class.cache_dir, CarrierWave.root)
-      FileUtils.mkdir_p File.expand_path("#{five_days_ago_int}-234-2213", @cache_dir)
-      FileUtils.mkdir_p File.expand_path("#{three_days_ago_int}-234-2213", @cache_dir)
-      FileUtils.mkdir_p File.expand_path("#{yesterday_int}-234-2213", @cache_dir)
+      FileUtils.mkdir_p File.expand_path("#{five_days_ago_int}-234-1234-2213", cache_dir)
+      FileUtils.mkdir_p File.expand_path("#{three_days_ago_int}-234-1234-2213", cache_dir)
+      FileUtils.mkdir_p File.expand_path("#{yesterday_int}-234-1234-2213", cache_dir)
     end
 
     after { FileUtils.rm_rf(@cache_dir) }
