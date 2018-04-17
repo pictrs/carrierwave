@@ -123,15 +123,20 @@ module CarrierWave
 
         self.cache_id = CarrierWave.generate_cache_id unless cache_id
 
-        @filename = new_file.filename
-        self.original_filename = new_file.filename
+        @filename = self.original_filename = if version_name.present?
+                                               # don't read content for top_version, as top_version.sanitized_file() would do
+                                               File.basename(top_version.path)
+                                             else
+                                               new_file.filename
+                                             end
 
         begin
           # first, create a workfile on which we perform processings
+          expanded_workfile_path = File.expand_path(workfile_path, root)
           if move_to_cache
-            @file = new_file.move_to(File.expand_path(workfile_path, root), permissions, directory_permissions)
+            @file = new_file.move_to(expanded_workfile_path, permissions, directory_permissions)
           else
-            @file = new_file.copy_to(File.expand_path(workfile_path, root), permissions, directory_permissions)
+            @file = new_file.copy_to(expanded_workfile_path, permissions, directory_permissions)
           end
 
           with_callbacks(:cache, @file) do

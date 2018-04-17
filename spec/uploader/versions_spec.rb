@@ -253,6 +253,23 @@ describe CarrierWave::Uploader do
 
         expect(File.read(public_path(@uploader.to_s))).to eq(File.read(public_path(@uploader.thumb.to_s)))
       end
+
+      it "should preserve original_filename for version.cache!" do
+        @uploader.cache!(File.open(file_path('test.jpg')))
+        orig_filename = @uploader.thumb.send(:original_filename)
+        @uploader.thumb.cache!
+        expect(@uploader.thumb.send(:original_filename)).to eq(orig_filename)
+      end
+
+      # TODO similar test with nested versions
+      # TODO similar test with versions from
+      it "should set store_path for {version}.cache!" do
+        @uploader.cache!(File.open(file_path('test.jpg')))
+
+        expect(@uploader.thumb.store_path).to eq('uploads/thumb_test.jpg')
+        @uploader.thumb.cache!
+        expect(@uploader.thumb.store_path).to eq('uploads/thumb_test.jpg')
+      end
     end
 
     describe "version with move_to_cache set" do
