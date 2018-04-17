@@ -296,6 +296,16 @@ module CarrierWave
         parent_version.try(:versions) || []
       end
 
+      def top_version
+        pv = self
+        i = 0
+        while pv.parent_version
+          pv = pv.parent_version
+          raise 'versions are somehow unexpected nested' if (i += 1) > 20
+        end
+        pv
+      end
+
       def full_filename(for_file)
         [version_name, super(for_file)].compact.join('_')
       end
@@ -311,8 +321,14 @@ module CarrierWave
         end
       end
 
-      def store_versions!(new_file)
-        versions_to_store.each { |name, v| v.store!(new_file) }
+      def store_versions!(new_file, version_names = nil)
+        if version_names
+          versions_to_store.each do |name, v|
+            v.store!(new_file) if version_names.any? { |vn| vn.to_sym == name.to_sym }
+          end
+        else
+          versions_to_store.each { |name, v| v.store!(new_file) }
+        end
       end
 
       def remove_versions!
