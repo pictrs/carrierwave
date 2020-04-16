@@ -194,6 +194,8 @@ module CarrierWave
             case @uploader.fog_credentials[:provider]
               when 'AWS'
                 local_file.url(expire_at, options)
+              when 'backblaze'
+                local_file.url(expire_at, options)
               when 'Rackspace'
                 connection.get_object_https_url(@uploader.fog_directory, path, expire_at, options)
               when 'OpenStack'
