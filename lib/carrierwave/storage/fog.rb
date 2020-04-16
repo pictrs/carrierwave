@@ -204,7 +204,7 @@ module CarrierWave
             local_file = local_directory.files.new(:key => path)
             expire_at = options[:expire_at] || ::Fog::Time.now.since(@uploader.fog_authenticated_url_expiration.to_i)
             case fog_provider
-            when 'AWS', 'Google'
+            when 'AWS', 'Google', 'backblaze'
               # Older versions of fog-google do not support options as a parameter
               if url_options_supported?(local_file)
                 local_file.url(expire_at, options)
