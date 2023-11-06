@@ -110,7 +110,7 @@ module CarrierWave
     end
 
     def remove?
-      remove.present? && remove !~ /\A0|false$\z/
+      remove.present? && (remove.is_a?(TrueClass) || remove !~ /\A0|false$\z/)
     end
 
     def remove!
