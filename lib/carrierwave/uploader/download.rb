@@ -40,7 +40,8 @@ module CarrierWave
             headers = @remote_headers.
               reverse_merge('User-Agent' => "CarrierWave/#{CarrierWave::VERSION}")
 
-            @file = Kernel.open(@uri.to_s, headers)
+            uri = URI(@uri.to_s)
+            @file = uri.open(headers)
             @file = @file.is_a?(String) ? StringIO.new(@file) : @file
           end
           @file
@@ -57,7 +58,7 @@ module CarrierWave
         end
 
         def filename_from_uri
-          URI.decode(File.basename(file.base_uri.path))
+          f = URI::DEFAULT_PARSER.unescape(File.basename(file.base_uri.path))
         end
 
         def method_missing(*args, &block)
